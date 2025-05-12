@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -124,6 +124,15 @@
 			color: #888;
 			font-style: italic;
 		}
+		
+		.memo_number {
+   			position: absolute;  
+   			bottom: 10px;        
+    		right: 10px;         
+    		font-size: 12px;     
+    		color: #888;         
+    		font-style: italic;
+		}	
 	</style>
 </head>
 
@@ -155,22 +164,25 @@
 				<a href = "#memo-manage">메모 관리</a>
 			</div>
 			<div class = "memo">
-				<div class = "title">제목 1</div>
+				<div class = "title">제목 1 ★</div>
 				<div class = "memo_category"># 카테고리 1</div>
 				<div class = "content">메모 내용 1</div>
 				<div class = "date">2025-03-30</div>
+				<div class = "memo_number">001</div>
 			</div>
 			<div class = "memo">
 				<div class = "title">제목 2</div>
 				<div class = "memo_category"># 카테고리 1 # 카테고리 2</div>
 				<div class = "content">메모 내용 2</div>
 				<div class = "date">2025-03-29</div>
+				<div class = "memo_number">002</div>
 			</div>
 			<div class = "memo">
-				<div class = "title">제목 3</div>
+				<div class = "title">제목 3 ★</div>
 				<div class = "memo_category"># 카테고리 3</div>
 				<div class = "content">메모 내용 3</div>
 				<div class = "date">2025-03-28</div>
+				<div class = "memo_number">003</div>
 			</div>
 		</div>
 	</div>	
