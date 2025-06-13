@@ -161,7 +161,7 @@
 		<div class = "recent_memo">
 			<h2>최근 작성한 메모</h2>
 			<div class = "memo_link">
-				<a href = "#memo-manage">메모 관리</a>
+				<a href = "MemoManage.jsp">메모 관리</a>
 			</div>
 			<div class = "memo">
 				<div class = "title">제목 1 ★</div>

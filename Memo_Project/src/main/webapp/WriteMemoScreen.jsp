@@ -1,4 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%
+	int memoNumber = 1;
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +28,7 @@
 		.content input {
 			width: 98%; 
 			padding: 12px;
-			height: 100px;
+			height: 180px;
 			border: 1px solid #ccc;
 			border-radius: 8px;
 			font-size: 16px; 
@@ -49,21 +53,60 @@
 			background-color: #218838;
 		}	
 
-		.color, .file_image, .important, .memoNumber {
-			display: inline-block;
-			width: 48%; 
-			margin-right: 10px;
+		.options {
+			display: flex;
 		}
 
-		.color, .file_image {
-			margin-bottom: 50px;
+		.color, .file_image, .important {
+			display: inline-block;
+		}
+		
+		.color {
+			margin-right: 250px;
+		}
+		
+		.important {
+			margin-left: 150px;
+		}
+		
+		.options button {
+  			display: inline-block;
+  			width: 100px;       
+  			font-size: 16px;
+  			margin-left: 20px;  
 		}
 	
 	</style>
+	
+	<script>
+		function validateForm() {
+			title = document.getElementById("title").value;
+		    category = document.getElementById("category").value;
+		    content = document.getElementById("content").value;
+
+		if (title === "") {
+			alert("제목을 입력해주세요.");
+			return false;
+		}
+		
+		if (category === "") {
+			alert("카테고리를 입력해주세요.");
+			return false;
+		}
+		
+		if (content === "") {
+			alert("내용을 입력해주세요.");
+			return false;
+		}
+
+		alert("등록되었습니다.");
+		return true; 
+	}
+	</script>
 </head>
 
 <body>
-<form action = "OutputScreen.jsp" method = "post">
+<form action = "MemoManage.jsp" method = "post" onsubmit = "return validateForm()">
 	<div class = "memo">
 		<h1>메모 작성</h1>
 		<div class = "tica">
@@ -73,7 +116,7 @@
 		
 		<div class = "tica">
 			<h2>카테고리</h2>
-			<input type = "text" id ="category" name = "category" placeholder = "카테고리를 입력하세요.">
+			<input type = "text" id = "category" name = "category" placeholder = "카테고리를 입력하세요.">
 		</div>
 		
 		<div class = "content">
@@ -84,7 +127,7 @@
 		<div class = "options">
 			<div class = "color">
 				<h2>배경색 선택하기</h2>
-				<select id ="color" name = "color">
+				<select name = "color">
 					<option value = "red">빨간색</option>
 					<option value = "orange">주황색</option>
 					<option value = "yellow">노란색</option>
@@ -97,19 +140,15 @@
 		
 			<div class = "file_image">
 				<h2>첨부 파일</h2>
-				<input type = "file" id = "file" accept = "image/jpg, image/gif">
+				<input type = "file" accept = "image/jpg, image/gif">
 			</div>
 		
 			<div class = "important">
 				<h2>중요 여부</h2>
-				<input type = "checkbox" id = "important" name = "important" value = "checked"> 중요 메모로 설정
+				<input type = "checkbox" name = "important" value = "checked"> 중요 메모로 설정
 			</div>
-		
-			<div class = "memoNumber">
-				<h2>메모 번호</h2>
-				<input type = "text" id = "memoNumber" name = "memoNumber" placeholder = "메모 번호를 입력하세요.">
-			</div>
-		
+			
+			<input type = "hidden" name = "memoNumber" value = "<%= memoNumber%>">
 			<button type = "submit">등록</button>
 		</div>
 	</div>
