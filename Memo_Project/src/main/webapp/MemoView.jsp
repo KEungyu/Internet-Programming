@@ -31,17 +31,19 @@
     <style>
         body {
             padding: 30px;
-            font-family: Arial, sans-serif;
         }
+        
         .memo-box {
             background-color: <%= (memo != null) ? memo[2] : "#fff" %>;
             padding: 20px;
             border-radius: 10px;
             color: #333;
         }
+        
         h2 {
             margin-top: 0;
         }
+        
         .back {
             margin-top: 20px;
         }
@@ -50,18 +52,18 @@
 <body>
 
 <% if (memo != null) { %>
-    <div class="memo-box">
+    <div class = "memo-box">
         <h2>메모 제목: <%= memo[1] %></h2>
+        <p>메모 번호: <%= memoId %></p>
+        <p>배경색: <%= memo[2] %></p>
         <p>중요 여부: <%= memo[3] %></p>
         <p>작성일: <%= memo[4] %></p>
-        <p>배경색: <%= memo[2] %></p>
+        <p>내용: <%= memo[6] %></p>
     </div>
-<% } else { %>
-    <p>메모를 찾을 수 없습니다.</p>
 <% } %>
 
-<div class="back">
-    <a href="MemoManage.jsp">← 메모 목록으로 돌아가기</a>
+<div class = "back">
+    <a href = "MemoManage.jsp">메모 목록</a>
 </div>
 
 </body>

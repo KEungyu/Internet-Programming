@@ -9,7 +9,7 @@
 	Integer memoCount = (Integer) session.getAttribute("memoCount"); 
 
 	if (memoArray == null) {
-	    memoArray = new String[100][5];  
+	    memoArray = new String[100][7];  
 		session.setAttribute("memoArray", memoArray);
 	}
 	
@@ -17,24 +17,55 @@
     String color= request.getParameter("color");
     String important = request.getParameter("important") != null ? "★" : "X";
     String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-
+    String category = request.getParameter("category");
+    String content = request.getParameter("content");
+    
     if (memoCount == null)
 		memoCount = 0;
     
     if (title != null && memoCount < 100) {    	
     	if (memoArray[memoCount] == null) 
-            memoArray[memoCount] = new String[5];
+            memoArray[memoCount] = new String[7];
     	
     	memoArray[memoCount][0] = String.valueOf(memoCount + 1);
         memoArray[memoCount][1] = title;
         memoArray[memoCount][2] = color;
         memoArray[memoCount][3] = important;
         memoArray[memoCount][4] = date;
+        memoArray[memoCount][5] = category;
+        memoArray[memoCount][6] = content;
+        
         memoCount++;
 
         session.setAttribute("memoArray", memoArray);
         session.setAttribute("memoCount", memoCount);
-    
+   
+        String[] categoryArray = (String[]) session.getAttribute("categoryArray");
+        Integer categoryCount = (Integer) session.getAttribute("categoryCount");
+
+        if (categoryArray == null) {
+            categoryArray = new String[100]; 
+            categoryCount = 0;
+        }
+
+        if (category != null && !category.equals("")) {
+            boolean exists = false;
+            for (int i = 0; i < categoryCount; i++) {
+                if (category.equals(categoryArray[i])) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
+                categoryArray[categoryCount] = category;
+                categoryCount++;
+            }
+        }
+
+        session.setAttribute("categoryArray", categoryArray);
+        session.setAttribute("categoryCount", categoryCount);
+        
         response.sendRedirect("MemoManage.jsp");
         return;
     }
@@ -83,12 +114,12 @@
 		text-decoration: underline;
 	}
 
-	.write-new {
+	.link {
 		margin-top: 20px;
 		text-align: right;
 	}
 
-	.write-new a {
+	.link a {
 		color: #007bff;
 		font-weight: bold;
 	}
@@ -104,7 +135,7 @@
 			<th>메모 번호</th>
 			<th>메모 제목</th>
 			<th>배경색</th>
-			<th>수정 / 삭제</th>
+			<th>수정 | 삭제</th>
 			<th>중요 여부</th>
 			<th>작성일</th>
 		</tr>
@@ -114,11 +145,11 @@
 		%>
         <tr>
             <td><%= memoArray[i][0] %></td>
-            <td><a href="ViewMemo.jsp?memoId=<%= memoArray[i][0] %>"><%= memoArray[i][1] %></a></td>
+            <td><a href="MemoView.jsp?memoId=<%= memoArray[i][0] %>"><%= memoArray[i][1] %></a></td>
             <td style="background-color: <%= memoArray[i][2] %>;"><%= memoArray[i][2] %></td>
             <td>
-                <a href="EditMemo.jsp?memoId=<%= memoArray[i][0] %>">수정</a> /
-                <a href="DeleteMemo.jsp?memoId=<%= memoArray[i][0] %>">삭제</a>
+                <a href="MemoEdit.jsp?memoId=<%= memoArray[i][0] %>">수정</a> |
+                <a href="MemoDelete.jsp?memoId=<%= memoArray[i][0] %>">삭제</a>
             </td>
             <td><%= memoArray[i][3] %></td>
             <td><%= memoArray[i][4] %></td>
@@ -127,8 +158,10 @@
 		} %>
 	</table>
 
-	<div class = "write-new">
-		<a href = "WriteMemoScreen.jsp">➕ 새 메모 작성</a>
+	<div class = "link">
+		<a href = "MemoWrite.jsp">새 메모 작성하기</a>
+		|
+		<a href = "index.jsp">메인 화면</a>
 	</div>
 
 </body>

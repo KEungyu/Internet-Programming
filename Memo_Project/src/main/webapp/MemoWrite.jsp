@@ -75,7 +75,19 @@
   			font-size: 16px;
   			margin-left: 20px;  
 		}
-	
+		
+		.buttonlink {
+  			position: fixed;
+ 			bottom: 20px;
+  			right: 5px;
+ 			width: 220px;
+		}
+		
+		.buttonlink a {
+			color: #007bff;
+			font-weight: bold;
+		}
+
 	</style>
 	
 	<script>
@@ -149,7 +161,11 @@
 			</div>
 			
 			<input type = "hidden" name = "memoNumber" value = "<%= memoNumber%>">
-			<button type = "submit">등록</button>
+			
+			<div class = "buttonlink">
+				<a href = "index.jsp">메인 화면</a>
+				<button type = "submit">등록</button>
+			</div>	
 		</div>
 	</div>
 </form>

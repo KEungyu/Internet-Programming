@@ -11,14 +11,13 @@
 			margin-top: 30px;
 		}
 		
-		.search {
+		#searchForm {
 			display: flex;
 			justify-content: center;
-			margin-top: 20px;
-			padding: 10px;
+			width: 100%;
 		}
 		
-		.search input {
+		#searchInput {
 			width: 60%;
 			padding: 12px 20px;
 			border: 2px solid #ccc;
@@ -26,7 +25,7 @@
 			font-size: 16px;	
 		}
 		
-		.search button {
+		#searchButton {
 			background-color: #28a745;
 			border: none;
 			padding: 12px 25px;
@@ -36,7 +35,7 @@
 			color: white;
 		}
 		
-		.search button:hover {
+		#searchButton:hover {
 			background-color: #218838;
 		}
 		
@@ -106,13 +105,12 @@
 		.memo .memo_category {
 			font-size: 12px;
 			font-style: italic;
-			color: #888;
-			font-weight: lighter;
+			color: black;
 		}
 		
 		.memo .content {
 			font-size: 14px;
-			color: gray;
+			color: black;
 			margin-top: 8px;
 		}
 		
@@ -139,51 +137,97 @@
 <body>
 	<h1>메모 관리 프로그램 메인 화면</h1>
 	<div class = "search"> 
-		<input type = "text" placeholder = "검색어를 입력하세요."> 
-		<button>검색</button>
+		<form id = "searchForm" action="MemoSearch.jsp" method="get" >
+			<input id = "searchInput" name = "search" type = "text" placeholder = "검색어를 입력하세요."> 
+			<button id = "searchButton" type = "submit">검색</button>
+		</form>
 	</div>
+<%
+	request.setCharacterEncoding("UTF-8");
+
+	String[][] memoArray = (String[][]) session.getAttribute("memoArray");
+	Integer memoCount = (Integer) session.getAttribute("memoCount");
+
+	// 카테고리 배열 준비
+	String[] categoryArray = new String[100];  // 최대 100개까지
+	int[] categoryCountArray = new int[100];
+	int categoryIndex = 0;
+
+	if (memoArray != null && memoCount != null) {
+		for (int i = 0; i < memoCount; i++) {
+			if (memoArray[i] != null && memoArray[i][5] != null) {
+				String[] categories = memoArray[i][5].split(" ");
+				for (int j = 0; j < categories.length; j++) {
+					String currentCat = categories[j];
+					boolean found = false;
+
+					for (int k = 0; k < categoryIndex; k++) {
+						if (categoryArray[k].equals(currentCat)) {
+							categoryCountArray[k]++;
+							found = true;
+							break;
+						}
+					}
+
+					if (!found) {
+						categoryArray[categoryIndex] = currentCat;
+						categoryCountArray[categoryIndex] = 1;
+						categoryIndex++;
+					}
+				}
+			}
+		}
+	}
+%>
 	
 	<div class = "main_content">
 		<div class = "category">
 			<h3># 카테고리 목록</h3>
 				<ul>
-					<li><a href = "#"># 카테고리 1 (1)</a></li>
-					<li><a href = "#"># 카테고리 2 (3)</a></li>
-					<li><a href = "#"># 카테고리 3 (8)</a></li>
-				<li><a href = "#"># 카테고리 4 (2)</a></li>
+					<%
+                	for (int i = 0; i < categoryIndex; i++) {
+            		%>
+               		<li><%= categoryArray[i] %> (<%= categoryCountArray[i] %>)</li>
+            		<%
+                	}
+            	%>
 			</ul>
 			
 			<div class = "category-footer">
-                <a href = "#category-management">카테고리 관리</a> 
+                <a href = "CategoryManage.jsp">카테고리 관리</a> 
             </div>
 		</div>
-		
+
 		<div class = "recent_memo">
 			<h2>최근 작성한 메모</h2>
 			<div class = "memo_link">
 				<a href = "MemoManage.jsp">메모 관리</a>
 			</div>
-			<div class = "memo">
-				<div class = "title">제목 1 ★</div>
-				<div class = "memo_category"># 카테고리 1</div>
-				<div class = "content">메모 내용 1</div>
-				<div class = "date">2025-03-30</div>
-				<div class = "memo_number">001</div>
-			</div>
-			<div class = "memo">
-				<div class = "title">제목 2</div>
-				<div class = "memo_category"># 카테고리 1 # 카테고리 2</div>
-				<div class = "content">메모 내용 2</div>
-				<div class = "date">2025-03-29</div>
-				<div class = "memo_number">002</div>
-			</div>
-			<div class = "memo">
-				<div class = "title">제목 3 ★</div>
-				<div class = "memo_category"># 카테고리 3</div>
-				<div class = "content">메모 내용 3</div>
-				<div class = "date">2025-03-28</div>
-				<div class = "memo_number">003</div>
-			</div>
+			<%
+				int shown = 0;
+				if (memoArray != null && memoCount != null) {
+					for (int i = memoCount - 1; i >= 0 && shown < 3; i--) {
+						if (memoArray[i] != null) {
+							String number = memoArray[i][0];
+							String title = memoArray[i][1];
+							String isImportant = memoArray[i][3];
+							String date = memoArray[i][4];
+							String category = memoArray[i][5];
+							String content = memoArray[i][6];
+			%>
+							<div class="memo">
+								<div class="title"><%= title %> <%= "★".equals(isImportant) ? "★" : "" %></div>
+								<div class="memo_category"># <%= category %></div>
+								<div class="content"><%= content %></div>
+								<div class="date"><%= date %></div>
+								<div class="memo_number"><%= number %></div>
+							</div>
+			<%
+							shown++;
+						}
+					}
+				}
+			%>
 		</div>
 	</div>	
 </body>
