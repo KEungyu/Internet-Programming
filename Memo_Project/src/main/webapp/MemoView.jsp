@@ -59,6 +59,11 @@
         <p>중요 여부: <%= memo[3] %></p>
         <p>작성일: <%= memo[4] %></p>
         <p>내용: <%= memo[6] %></p>
+        
+        <% if (memo[7] != null && !memo[7].equals("")) { %>
+    		<p>첨부 이미지:</p>
+    		<img src="upload/<%= memo[7] %>" alt="첨부 이미지" style="max-width: 300px;">
+	 <% } %>
     </div>
 <% } %>
 

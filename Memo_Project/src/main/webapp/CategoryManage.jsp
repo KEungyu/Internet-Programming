@@ -104,7 +104,7 @@
         <div class="category">
             <a href="CategoryMemoList.jsp?category=<%= category %>"><%= category %></a>
             <span class="count">(메모 <%= count %>개)</span>
-            (<a href="CategoryEdit.jsp?category=<%= category %>">수정</a> |
+            (<a href="CategoryEdit.jsp?category=<%= category %>"> 수정</a> |
             <a href="CategoryDelete.jsp?category=<%= category %>"
        			onclick="return confirm('카테고리와 해당 카테고리의 모든 메모가 삭제됩니다. 정말 삭제하시겠습니까?');">
        			삭제

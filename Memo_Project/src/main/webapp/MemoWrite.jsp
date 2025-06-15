@@ -118,7 +118,7 @@
 </head>
 
 <body>
-<form action = "MemoManage.jsp" method = "post" onsubmit = "return validateForm()">
+<form action = "MemoManage.jsp" method = "post" enctype = "multipart/form-data" onsubmit = "return validateForm()">
 	<div class = "memo">
 		<h1>메모 작성</h1>
 		<div class = "tica">
@@ -152,7 +152,7 @@
 		
 			<div class = "file_image">
 				<h2>첨부 파일</h2>
-				<input type = "file" accept = "image/jpg, image/gif">
+				<input type = "file" name = "filename" accept = "image/jpg, image/gif">
 			</div>
 		
 			<div class = "important">

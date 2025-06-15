@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="java.text.SimpleDateFormat" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="java.text.SimpleDateFormat,
+	 jakarta.servlet.http.Part, java.io.File" %>
 <%
     request.setCharacterEncoding("UTF-8");
 
@@ -23,13 +24,35 @@
         response.sendRedirect("MemoManage.jsp");
         return;
     }
-
+    
     String title = request.getParameter("title");
     String color = request.getParameter("color");
     String important = request.getParameter("important") != null ? "★" : "X";
     String category = request.getParameter("category");
     String content = request.getParameter("content");  
     String date = memoArray[memoId][4];  
+
+    Part part = null;
+    String fileName = memoArray[memoId][7]; // 기존에 저장된 파일명 유지
+
+    try {
+        part = request.getPart("filename");
+    } catch (Exception e) {
+        part = null;
+    }
+
+    if (part != null) {
+        String newFileName = part.getSubmittedFileName();
+        if (newFileName != null && !newFileName.equals("")) {
+            String uploadPath = application.getRealPath("upload");
+            File dir = new File(uploadPath);
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+            part.write(uploadPath + File.separator + newFileName);
+            fileName = newFileName;  // 새 파일명으로 업데이트
+        }
+    }
 
 
     if (title != null && !title.trim().equals("")) {
@@ -38,6 +61,7 @@
         memoArray[memoId][3] = important;
         memoArray[memoId][5] = category;
         memoArray[memoId][6] = content;
+        memoArray[memoId][7] = fileName;
 
         session.setAttribute("memoArray", memoArray);
 
@@ -50,6 +74,7 @@
     String existingImportant = memoArray[memoId][3];
     String existingCategory = memoArray[memoId][5];
     String existingContent = memoArray[memoId][6];
+    String existingFileName = memoArray[memoId][7];
 %>
 
 <!DOCTYPE html>
@@ -155,7 +180,7 @@
     </script>
 </head>
 <body>
-<form action = "MemoEdit.jsp?memoId=<%= memoId + 1 %>" method = "post" onsubmit = "return validateForm()">
+<form action = "MemoEdit.jsp?memoId=<%= memoId + 1 %>" method = "post" enctype = "multipart/form-data" onsubmit = "return validateForm()">
     <div class = "memo">
         <h1>메모 수정</h1>
         <div class = "tica">
@@ -189,7 +214,12 @@
 
             <div class = "file_image">
                 <h2>첨부 파일</h2>
-                <input type = "file" accept = "image/jpg, image/gif" disabled>
+                <input type = "file" name = "filename" accept = "image/jpg, image/gif">
+            	<% if (existingFileName != null && !existingFileName.equals("")) { %>
+        			<p>현재 파일: <%= existingFileName %></p>
+    			<% } else { %>
+        		<p>현재 파일: 없음</p>
+    			<% } %>
             </div>
 
             <div class = "important">
@@ -200,7 +230,7 @@
 			
 		<div class = "buttonlink">
 			<a href = "index.jsp">메인 화면</a>
-			<button type = "submit">등록</button>
+			<button type = "submit">수정</button>
 		</div>	
     </div>
 </form>

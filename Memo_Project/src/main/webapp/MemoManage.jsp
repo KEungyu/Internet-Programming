@@ -1,15 +1,39 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="java.util.*,
-    java.text.SimpleDateFormat"%>
+    java.text.SimpleDateFormat, java.io.*, 
+    jakarta.servlet.http.Part"%>
 
 <%
     request.setCharacterEncoding("UTF-8");
+	
+	Part part = null;
+	String fileName = "";
+	
+	try {
+    	part = request.getPart("filename");
+	} catch (Exception e) {
+		part = null;
+	}
+
+	if (part != null) {
+    	fileName = part.getSubmittedFileName();
+    	
+    	if (fileName != null && !fileName.equals("")) {
+        	String uploadPath = application.getRealPath("upload");
+        	File dir = new File(uploadPath);
+        	
+        	if (!dir.exists()) 
+            	dir.mkdir();
+        	
+        	part.write(uploadPath + File.separator + fileName);	
+    	}
+	}
 
 	String[][] memoArray = (String[][])session.getAttribute("memoArray");
 	Integer memoCount = (Integer) session.getAttribute("memoCount"); 
 
 	if (memoArray == null) {
-	    memoArray = new String[100][7];  
+	    memoArray = new String[100][8];  
 		session.setAttribute("memoArray", memoArray);
 	}
 	
@@ -25,7 +49,7 @@
     
     if (title != null && memoCount < 100) {    	
     	if (memoArray[memoCount] == null) 
-            memoArray[memoCount] = new String[7];
+            memoArray[memoCount] = new String[8];
     	
     	memoArray[memoCount][0] = String.valueOf(memoCount + 1);
         memoArray[memoCount][1] = title;
@@ -34,6 +58,7 @@
         memoArray[memoCount][4] = date;
         memoArray[memoCount][5] = category;
         memoArray[memoCount][6] = content;
+        memoArray[memoCount][7] = fileName;
         
         memoCount++;
 
