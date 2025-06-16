@@ -136,6 +136,7 @@
 
 <body>
 	<h1>메모 관리 프로그램 메인 화면</h1>
+	<!-- 검색창 -->
 	<div class = "search"> 
 		<form id = "searchForm" action="MemoSearch.jsp" method="get" >
 			<input id = "searchInput" name = "search" type = "text" placeholder = "검색어를 입력하세요."> 
@@ -144,38 +145,40 @@
 	</div>
 <%
 	request.setCharacterEncoding("UTF-8");
-
+	
+	// 메모 배열과 개수 가져오기
 	String[][] memoArray = (String[][]) session.getAttribute("memoArray");
 	Integer memoCount = (Integer) session.getAttribute("memoCount");
 
-	// 카테고리 배열 준비
-	String[] categoryArray = new String[100];  // 최대 100개까지
+	// 카테고리를 저장할 배열
+	String[] categoryArray = new String[100];  
 	int[] categoryCountArray = new int[100];
 	int categoryIndex = 0;
 
 	if (memoArray != null && memoCount != null) {
 		for (int i = 0; i < memoCount; i++) {
 			if (memoArray[i] != null && memoArray[i][5] != null) {
-				String[] categories = memoArray[i][5].split(" ");
-				for (int j = 0; j < categories.length; j++) {
-					String currentCat = categories[j];
-					boolean found = false;
-
-					for (int k = 0; k < categoryIndex; k++) {
-						if (categoryArray[k].equals(currentCat)) {
-							categoryCountArray[k]++;
-							found = true;
-							break;
-						}
-					}
-
-					if (!found) {
-						categoryArray[categoryIndex] = currentCat;
-						categoryCountArray[categoryIndex] = 1;
-						categoryIndex++;
+				String categories = memoArray[i][5];
+				
+				String currentCat = categories;
+				boolean exists = false;
+				
+				// 동일한 카테고리가 존재할 경우 카테고리수 + 1
+				for (int k = 0; k < categoryIndex; k++) {
+					if (categoryArray[k].equals(currentCat)) {
+						categoryCountArray[k]++;
+						exists = true;
+						break;
 					}
 				}
-			}
+					
+				// 동일한 카테고리가 존재하지 않을 경우 새로 추가
+				if (!exists) {
+					categoryArray[categoryIndex] = currentCat;
+					categoryCountArray[categoryIndex] = 1;
+					categoryIndex++;
+				}
+			}			
 		}
 	}
 %>
@@ -185,6 +188,7 @@
 			<h3># 카테고리 목록</h3>
 				<ul>
 					<%
+					// 저장된 카테고리 출력
                 	for (int i = 0; i < categoryIndex; i++) {
             		%>
                		<li><%= categoryArray[i] %> (<%= categoryCountArray[i] %>)</li>
@@ -205,6 +209,8 @@
 			</div>
 			<%
 				int shown = 0;
+				
+				// 최근 작성된 3개의 메모를 간략하게 출력
 				if (memoArray != null && memoCount != null) {
 					for (int i = memoCount - 1; i >= 0 && shown < 3; i--) {
 						if (memoArray[i] != null) {
@@ -215,12 +221,12 @@
 							String category = memoArray[i][5];
 							String content = memoArray[i][6];
 			%>
-							<div class="memo">
-								<div class="title"><%= title %> <%= "★".equals(isImportant) ? "★" : "" %></div>
-								<div class="memo_category"># <%= category %></div>
-								<div class="content"><%= content %></div>
-								<div class="date"><%= date %></div>
-								<div class="memo_number"><%= number %></div>
+							<div class = "memo">
+								<div class = "title"><%= title %> <%= "★".equals(isImportant) ? "★" : "" %></div>
+								<div class = "memo_category"># <%= category %></div>
+								<div class = "content"><%= content %></div>
+								<div class = "date"><%= date %></div>
+								<div class = "memo_number"><%= number %></div>
 							</div>
 			<%
 							shown++;

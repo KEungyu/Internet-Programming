@@ -3,13 +3,17 @@
 
 <%
     request.setCharacterEncoding("UTF-8");
-
+	
+	// 세션에서 메모 배열과 메모 개수 가져오기
     String[][] memoArray = (String[][]) session.getAttribute("memoArray");
     Integer memoCount = (Integer) session.getAttribute("memoCount");
 
     String search = request.getParameter("search");
-    if (search == null) search = "";
-    String searchLower = search.toLowerCase();
+    
+    if (search == null) 
+    	search = "";
+    
+    String searchLower = search.toLowerCase(); // 대소문자 구분 없이 탐색하기 위한 코드
 %>
 
 <!DOCTYPE html>
@@ -80,24 +84,27 @@
 		</tr>
 
 		<%
-			boolean found = false;
+			boolean exists = false; // 검색 결과가 존재하는지 판단하기 위한 변수
+		
 			if (memoArray != null && memoCount != null) {
 				for (int i = 0; i < memoCount; i++) {
 					if (memoArray[i] != null && memoArray[i][1] != null) {
 						String title = memoArray[i][1];
 						String content = memoArray[i][6] != null ? memoArray[i][6] : "";
+						
+						// 해당 검색어를 포함하는지 여부를 확인하고 출력
 						if (search.isEmpty() 
 						    || title.toLowerCase().contains(searchLower) 
 						    || content.toLowerCase().contains(searchLower)) {
-							found = true;
+							exists = true;
 		%>
 		<tr>
 			<td><%= memoArray[i][0] %></td>
-			<td><a href="MemoView.jsp?memoId=<%= memoArray[i][0] %>"><%= title %></a></td>
-			<td style="background-color: <%= memoArray[i][2] %>;"><%= memoArray[i][2] %></td>
+			<td><a href = "MemoView.jsp?memoId=<%= memoArray[i][0] %>"><%= title %></a></td>
+			<td style = "background-color: <%= memoArray[i][2] %>;"><%= memoArray[i][2] %></td>
 			<td>
-				<a href="MemoEdit.jsp?memoId=<%= memoArray[i][0] %>">수정</a> |
-				<a href="MemoDelete.jsp?memoId=<%= memoArray[i][0] %>">삭제</a>
+				<a href = "MemoEdit.jsp?memoId=<%= memoArray[i][0] %>">수정</a> |
+				<a href = "MemoDelete.jsp?memoId=<%= memoArray[i][0] %>">삭제</a>
 			</td>
 			<td><%= memoArray[i][3] %></td>
 			<td><%= memoArray[i][4] %></td>
@@ -107,17 +114,19 @@
 					}
 				}
 			}
-			if (!found) {
+			
+			// 일치하는 메모가 없는 경우
+			if (!exists) {
 		%>
 		<tr>
-			<td colspan="6" style="color: #888; text-align:center;">검색 결과가 없습니다.</td>
+			<td colspan = "6" style = "color: #888; text-align:center;">검색 결과가 없습니다.</td>
 		</tr>
 		<% } %>
 	</table>
 
-	<div class="link">
-		<a href="MemoManage.jsp">메모 관리</a> | 
-		<a href="index.jsp">메인 화면</a>
+	<div class = "link">
+		<a href = "MemoManage.jsp">메모 관리</a> | 
+		<a href = "index.jsp">메인 화면</a>
 	</div>
 
 </body>

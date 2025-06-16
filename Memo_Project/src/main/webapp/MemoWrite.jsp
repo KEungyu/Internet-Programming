@@ -91,6 +91,7 @@
 	</style>
 	
 	<script>
+		// 제목, 카테고리, 내용을 반드시 작성하도록 요구
 		function validateForm() {
 			title = document.getElementById("title").value;
 		    category = document.getElementById("category").value;

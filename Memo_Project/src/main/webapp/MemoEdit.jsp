@@ -2,10 +2,12 @@
 	 jakarta.servlet.http.Part, java.io.File" %>
 <%
     request.setCharacterEncoding("UTF-8");
-
+	
+	// 세션에 저장된 메모 배열과 개수 가져오기
     String[][] memoArray = (String[][]) session.getAttribute("memoArray");
     Integer memoCount = (Integer) session.getAttribute("memoCount");
-
+	
+    // 존재하지 않는 경우 예외 처리
     if (memoArray == null || memoCount == null) {
         response.sendRedirect("MemoManage.jsp");
         return;
@@ -16,11 +18,16 @@
 
     if (memoIdStr != null) {
         memoId = Integer.parseInt(memoIdStr) - 1;
+        
+        // memoId 범위가 유효하지 않은 경우 예외처리
         if (memoId < 0 || memoId >= memoCount || memoArray[memoId] == null) {
             response.sendRedirect("MemoManage.jsp");
             return;
         }
-    } else {
+    } 
+    
+    
+    else {
         response.sendRedirect("MemoManage.jsp");
         return;
     }
@@ -33,29 +40,31 @@
     String date = memoArray[memoId][4];  
 
     Part part = null;
-    String fileName = memoArray[memoId][7]; // 기존에 저장된 파일명 유지
+    String fileName = memoArray[memoId][7]; 
 
     try {
         part = request.getPart("filename");
-    } catch (Exception e) {
-        part = null;
     }
 
+    catch (Exception e) {
+        part = null;
+    }
+	
+    // 파일이 있는 경우 
     if (part != null) {
         String newFileName = part.getSubmittedFileName();
+        
         if (newFileName != null && !newFileName.equals("")) {
             String uploadPath = application.getRealPath("upload");
             File dir = new File(uploadPath);
-            if (!dir.exists()) {
-                dir.mkdir();
-            }
+            
             part.write(uploadPath + File.separator + newFileName);
             fileName = newFileName;  // 새 파일명으로 업데이트
         }
     }
 
-
-    if (title != null && !title.trim().equals("")) {
+	// 제목이 존재하는 경우 수정 처리
+    if (title != null) {
         memoArray[memoId][1] = title;
         memoArray[memoId][2] = color;
         memoArray[memoId][3] = important;
@@ -68,7 +77,8 @@
         response.sendRedirect("MemoManage.jsp");
         return;
     }
-
+	
+    // 기존의 메모 구성 요소들
     String existingTitle = memoArray[memoId][1];
     String existingColor = memoArray[memoId][2];
     String existingImportant = memoArray[memoId][3];
@@ -160,9 +170,10 @@
     </style>
 
     <script>
+    	// 제목, 내용이 입력 되었는지 유효성 검사 진행
         function validateForm() {
-            var title = document.getElementById("title").value();
-            var content = document.getElementById("content").value();
+            var title = document.getElementById("title").value;
+            var content = document.getElementById("content").value;
 
             if (title === "") {
                 alert("제목을 입력해주세요.");
@@ -183,6 +194,7 @@
 <form action = "MemoEdit.jsp?memoId=<%= memoId + 1 %>" method = "post" enctype = "multipart/form-data" onsubmit = "return validateForm()">
     <div class = "memo">
         <h1>메모 수정</h1>
+        
         <div class = "tica">
             <h2>제목</h2>
             <input type = "text" id = "title" name = "title" value = "<%= existingTitle %>">
@@ -190,6 +202,7 @@
 
         <div class = "tica">
             <h2>카테고리</h2>
+            <!-- 카테고리는 수정할 수 없도록 readonly 설정 -->
             <input type = "text" id = "category" name = "category" value = "<%= existingCategory %>" readonly>
         </div>
 
@@ -214,6 +227,7 @@
 
             <div class = "file_image">
                 <h2>첨부 파일</h2>
+                <!-- 기존 파일 명 출력 -->
                 <input type = "file" name = "filename" accept = "image/jpg, image/gif">
             	<% if (existingFileName != null && !existingFileName.equals("")) { %>
         			<p>현재 파일: <%= existingFileName %></p>

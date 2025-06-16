@@ -14,7 +14,8 @@
 	} catch (Exception e) {
 		part = null;
 	}
-
+	
+	// 파일 정상적으로 가져온 경우
 	if (part != null) {
     	fileName = part.getSubmittedFileName();
     	
@@ -22,16 +23,15 @@
         	String uploadPath = application.getRealPath("upload");
         	File dir = new File(uploadPath);
         	
-        	if (!dir.exists()) 
-            	dir.mkdir();
-        	
         	part.write(uploadPath + File.separator + fileName);	
     	}
 	}
-
+	
+	// 세션에서 메모 배열과 개수 가져오기
 	String[][] memoArray = (String[][])session.getAttribute("memoArray");
 	Integer memoCount = (Integer) session.getAttribute("memoCount"); 
-
+	
+	// 메모 배열이 없는 경우 생성 및 세션에 저장
 	if (memoArray == null) {
 	    memoArray = new String[100][8];  
 		session.setAttribute("memoArray", memoArray);
@@ -48,9 +48,11 @@
 		memoCount = 0;
     
     if (title != null && memoCount < 100) {    	
+    	// 새로운 메모를 저장할 공간 생성
     	if (memoArray[memoCount] == null) 
             memoArray[memoCount] = new String[8];
     	
+    	// 메모 요소 저장
     	memoArray[memoCount][0] = String.valueOf(memoCount + 1);
         memoArray[memoCount][1] = title;
         memoArray[memoCount][2] = color;
@@ -64,17 +66,20 @@
 
         session.setAttribute("memoArray", memoArray);
         session.setAttribute("memoCount", memoCount);
-   
+   		
+        // 세션에서 카테고리 배열 가져오기 
         String[] categoryArray = (String[]) session.getAttribute("categoryArray");
         Integer categoryCount = (Integer) session.getAttribute("categoryCount");
-
+	
         if (categoryArray == null) {
             categoryArray = new String[100]; 
             categoryCount = 0;
         }
-
+		
         if (category != null && !category.equals("")) {
             boolean exists = false;
+            
+            // 해당 카테고리가 이미 존재하는 지 확인
             for (int i = 0; i < categoryCount; i++) {
                 if (category.equals(categoryArray[i])) {
                     exists = true;
@@ -152,9 +157,7 @@
 </style>
 </head>
 <body>
-
 	<h1>메모 관리</h1>
-
 	<table>
 		<tr>
 			<th>메모 번호</th>
@@ -164,17 +167,17 @@
 			<th>중요 여부</th>
 			<th>작성일</th>
 		</tr>
-
+		
 		<% for (int i = 0; i < memoCount; i++) { 
 			if (memoArray[i] != null && memoArray[i][0] != null) {
 		%>
         <tr>
             <td><%= memoArray[i][0] %></td>
-            <td><a href="MemoView.jsp?memoId=<%= memoArray[i][0] %>"><%= memoArray[i][1] %></a></td>
-            <td style="background-color: <%= memoArray[i][2] %>;"><%= memoArray[i][2] %></td>
+            <td><a href = "MemoView.jsp?memoId=<%= memoArray[i][0] %>"><%= memoArray[i][1] %></a></td>
+            <td style = "background-color: <%= memoArray[i][2] %>;"><%= memoArray[i][2] %></td>
             <td>
-                <a href="MemoEdit.jsp?memoId=<%= memoArray[i][0] %>">수정</a> |
-                <a href="MemoDelete.jsp?memoId=<%= memoArray[i][0] %>">삭제</a>
+                <a href = "MemoEdit.jsp?memoId=<%= memoArray[i][0] %>">수정</a> |
+                <a href = "MemoDelete.jsp?memoId=<%= memoArray[i][0] %>">삭제</a>
             </td>
             <td><%= memoArray[i][3] %></td>
             <td><%= memoArray[i][4] %></td>

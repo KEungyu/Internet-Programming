@@ -12,15 +12,15 @@
             memoId = -1;
         }
     }
-
+	
+    // 세션에 저장된 메모 배열과 개수 가져오기
     String[][] memoArray = (String[][]) session.getAttribute("memoArray");
     Integer memoCount = (Integer) session.getAttribute("memoCount");
 
     String[] memo = null;
 
-    if (memoArray != null && memoId > 0 && memoId <= memoCount) {
+    if (memoArray != null && memoId > 0 && memoId <= memoCount) 
         memo = memoArray[memoId - 1];
-    }
 %>
 
 <!DOCTYPE html>
@@ -34,7 +34,7 @@
         }
         
         .memo-box {
-            background-color: <%= (memo != null) ? memo[2] : "#fff" %>;
+            background-color: <%=memo[2]%>;
             padding: 20px;
             border-radius: 10px;
             color: #333;
@@ -47,11 +47,13 @@
         .back {
             margin-top: 20px;
         }
+        
     </style>
 </head>
 <body>
 
 <% if (memo != null) { %>
+	<!-- 저장된 메모 구성 요소들 출력 -->
     <div class = "memo-box">
         <h2>메모 제목: <%= memo[1] %></h2>
         <p>메모 번호: <%= memoId %></p>
@@ -62,7 +64,7 @@
         
         <% if (memo[7] != null && !memo[7].equals("")) { %>
     		<p>첨부 이미지:</p>
-    		<img src="upload/<%= memo[7] %>" alt="첨부 이미지" style="max-width: 300px;">
+    		<img src = "upload/<%= memo[7] %>" alt = "첨부 이미지" style = "max-width: 300px;">
 	 <% } %>
     </div>
 <% } %>

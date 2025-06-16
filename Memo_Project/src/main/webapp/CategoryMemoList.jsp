@@ -1,9 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     request.setCharacterEncoding("UTF-8");
-
+	
+	// 클릭된 카테고리
     String selectedCategory = request.getParameter("category");
-
+	
+    // 메모 배열
     String[][] memoArray = (String[][]) session.getAttribute("memoArray");
     Integer memoCount = (Integer) session.getAttribute("memoCount");
 
@@ -80,17 +82,18 @@
             <th>작성일</th>
         </tr>
 
+		<!-- 해당 카테고리에 저장된 모든 메모 순회 -->
         <%
             for (int i = 0; i < memoCount; i++) {
                 if (memoArray[i] != null && memoArray[i][5] != null && memoArray[i][5].equals(selectedCategory)) {
         %>
         <tr>
             <td><%= memoArray[i][0] %></td>
-            <td><a href="MemoView.jsp?memoId=<%= memoArray[i][0] %>"><%= memoArray[i][1] %></a></td>
-            <td style="background-color: <%= memoArray[i][2] %>;"><%= memoArray[i][2] %></td>
+            <td><a href = "MemoView.jsp?memoId=<%= memoArray[i][0] %>"><%= memoArray[i][1] %></a></td>
+            <td style = "background-color: <%= memoArray[i][2] %>;"><%= memoArray[i][2] %></td>
             <td>
-                <a href="MemoEdit.jsp?memoId=<%= memoArray[i][0] %>">수정</a> |
-                <a href="MemoDelete.jsp?memoId=<%= memoArray[i][0] %>">삭제</a>
+                <a href = "MemoEdit.jsp?memoId=<%= memoArray[i][0] %>">수정</a> |
+                <a href = "MemoDelete.jsp?memoId=<%= memoArray[i][0] %>">삭제</a>
             </td>
             <td><%= memoArray[i][3] %></td>
             <td><%= memoArray[i][4] %></td>
@@ -101,10 +104,10 @@
         %>
     </table>
 
-    <div class="link">
-        <a href="MemoWrite.jsp">새 메모 작성하기</a> |
-        <a href="CategoryManage.jsp">카테고리 목록</a> |
-        <a href="index.jsp">메인 화면</a>
+    <div class = "link">
+        <a href = "MemoWrite.jsp">새 메모 작성하기</a> |
+        <a href = "CategoryManage.jsp">카테고리 목록</a> |
+        <a href = "index.jsp">메인 화면</a>
     </div>
 
 </body>
